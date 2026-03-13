@@ -58,6 +58,7 @@ function VerFichasTecnicasIngeniero() {
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showAdvertencia, setShowAdvertencia] = useState(false);
 
   /////
   const [modulos, setModulos] = useState([]);
@@ -100,6 +101,7 @@ function VerFichasTecnicasIngeniero() {
   const btnVerTabla = (ficha, indice) => {
     console.log("haber la ficha", ficha, "id", ficha.idFichatecnica);
     setFichaTecnica(ficha);
+    setShowAdvertencia(false);
     obtenerDetalleTecnicasIngeniero(ficha.idFichatecnica);
     obtenerModulos(ficha.idFichatecnica);
     // obtenerPartidas(ficha.idFichatecnica);
@@ -854,23 +856,8 @@ function VerFichasTecnicasIngeniero() {
     }
   };
 
-  const EnviarguardadoCotizacion = async () => {
-    /* const accionUsuario = await Swal.fire({
-      icon: "warning",
-      title: "Recuerde que una ves enviado no se podra modificar mas",
-      showConfirmButton: true,
-      showCancelButton: true,
-    });
-
-    if (accionUsuario.isConfirmed) {
-      guardarCotizacion(fichaTecnica.idFichatecnica);
-      obtenerFichasTecnicasIngeniero(idUsuario);
-      setMostarFicha(false);
-    }  */
-    //guardar cotizacion
-
+  const flujoNormalCotizacion = () => {
     Swal.fire({
-      //  title: `"Solicitar a gerente de proyectos:"`,
       title: `${
         nombreRol == "Gerente de Proyecto"
           ? "Solicitar a gerencia general:"
@@ -882,12 +869,19 @@ function VerFichasTecnicasIngeniero() {
       focusConfirm: false,
       preConfirm: () => {
         const mensaje = Swal.getPopup().querySelector("#mensaje").value;
-
         return guardarCotizacion(mensaje, fichaTecnica.idFichatecnica);
       },
     }).then((result) => {
       console.log(result);
     });
+  };
+
+  const EnviarguardadoCotizacion = () => {
+    if (fichaTecnica.actualizarPreciosCostos == 1) {
+      setShowAdvertencia(true);
+      return;
+    }
+    flujoNormalCotizacion();
   };
 
   const aprobarCotizacion = () => {
@@ -1063,6 +1057,7 @@ function VerFichasTecnicasIngeniero() {
                         3. Para decimales usar solo el "." (punto)
                       </p>
                     </div>
+                    {showAdvertencia && (
                     <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
                       <div
                         style={{
@@ -1106,13 +1101,14 @@ function VerFichasTecnicasIngeniero() {
                           <button
                             className="btn btn-outline-secondary btn-sm text-uppercase"
                             style={{ minWidth: "90px" }}
-                            onClick={() => {}}
+                            onClick={() => setShowAdvertencia(false)}
                           >
                             Cancelar
                           </button>
                         </div>
                       </div>
                     </div>
+                    )}
                   </div>
                 )}
 
@@ -1335,7 +1331,7 @@ function VerFichasTecnicasIngeniero() {
                               onClick={() => EnviarguardadoCotizacion()}
                             >
                               <BsFillEmojiLaughingFill className="h3 m-0 p-0 pe-1" />
-                              Guardar cotizacion{" "}
+                              Guardar cotizacion
                             </button>
                           )}
                         {
@@ -1514,14 +1510,37 @@ function VerFichasTecnicasIngeniero() {
         <Modal.Footer>
           <Button
             variant="success"
-            onClick={() => {
-              // TODO: conectar con API de copia de seguridad
+            onClick={async () => {
+              try {
+                await clienteAxios.post(
+                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
+                  { indCopiaSeguridad: 1 }
+                );
+              } catch (error) {
+                console.log("Error al actualizar precios-costos:", error);
+              }
               setShowBackupModal(false);
+              setShowAdvertencia(false);
+              flujoNormalCotizacion();
             }}
           >
             Sí
           </Button>
-          <Button variant="secondary" onClick={() => setShowBackupModal(false)}>
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              try {
+                await clienteAxios.post(
+                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
+                  { indCopiaSeguridad: 0 }
+                );
+              } catch (error) {
+                console.log("Error al actualizar precios-costos:", error);
+              }
+              setShowBackupModal(false);
+              setShowAdvertencia(false);
+            }}
+          >
             No
           </Button>
         </Modal.Footer>

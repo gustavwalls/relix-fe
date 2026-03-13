@@ -8,61 +8,19 @@ import clienteAxios from "../../config/axios";
 
 const columns = [
   { field: "id", headerName: "N°", width: 60 },
-  {
-    field: "codigoRelix",
-    headerName: "Código Relix",
-    width: 150,
-    align: "left",
-  },
-  {
-    field: "descripcion",
-    headerName: "Descripción",
-    width: 300,
-  },
-  {
-    field: "unidad",
-    headerName: "UND",
-    width: 80,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "cantidadReal",
-    headerName: "Cantidad Real",
-    width: 130,
-    align: "right",
-    headerAlign: "right",
-  },
-  {
-    field: "costoUnitarioReal",
-    headerName: "Costo Unit. Real $",
-    width: 160,
-    align: "right",
-    headerAlign: "right",
-    valueFormatter: (params) =>
-      params.value != null ? params.value.toFixed(2) : "",
-  },
-  {
-    field: "costoTotalReal",
-    headerName: "Costo Total Real $",
-    width: 160,
-    align: "right",
-    headerAlign: "right",
-    valueFormatter: (params) =>
-      params.value != null ? params.value.toFixed(2) : "",
-  },
-  {
-    field: "proveedor",
-    headerName: "Proveedor",
-    width: 180,
-  },
-  {
-    field: "fechaRegistro",
-    headerName: "Fecha Registro",
-    width: 140,
-    align: "center",
-    headerAlign: "center",
-  },
+  { field: "codigosoftcomProducto", headerName: "Cód. Softcom", width: 140 },
+  { field: "descripcionProducto", headerName: "Descripción", width: 280 },
+  { field: "codigoreferenciaProducto", headerName: "Cód. Referencia", width: 140 },
+  { field: "undProducto", headerName: "UND", width: 80, align: "center", headerAlign: "center" },
+  { field: "marcaProducto", headerName: "Marca", width: 120 },
+  { field: "familiaProducto", headerName: "Familia", width: 120 },
+  { field: "proveedorProducto", headerName: "Proveedor", width: 150 },
+  { field: "costopromedioProducto", headerName: "Costo Promedio $", width: 150, align: "right", headerAlign: "right" },
+  { field: "costodisenoProducto", headerName: "Costo Diseño $", width: 140, align: "right", headerAlign: "right" },
+  { field: "precioventaunoProducto", headerName: "P. Venta 1 $", width: 120, align: "right", headerAlign: "right" },
+  { field: "precioventadosProducto", headerName: "P. Venta 2 $", width: 120, align: "right", headerAlign: "right" },
+  { field: "precioventatresProducto", headerName: "P. Venta 3 $", width: 120, align: "right", headerAlign: "right" },
+  { field: "precioventacuatroProducto", headerName: "P. Venta 4 $", width: 120, align: "right", headerAlign: "right" },
 ];
 
 function ConsultarCostosReales() {
@@ -84,7 +42,24 @@ function ConsultarCostosReales() {
 
     try {
       const { data } = await clienteAxios.get(`/productos/${codigoRelix.trim()}`);
-      setResultados(Array.isArray(data) ? data : [{ ...data, id: 1 }]);
+      const mapRow = (item, idx) => ({
+        id: idx + 1,
+        codigosoftcomProducto: item.codigosoftcomProducto,
+        descripcionProducto: item.descripcionProducto,
+        codigoreferenciaProducto: item.codigoreferenciaProducto,
+        undProducto: item.undProducto,
+        marcaProducto: item.marcaProducto,
+        familiaProducto: item.familiaProducto,
+        proveedorProducto: item.proveedorProducto,
+        costopromedioProducto: item.costopromedioProducto,
+        costodisenoProducto: item.costodisenoProducto,
+        precioventaunoProducto: item.precios ? item.precios.precioventaunoProducto : null,
+        precioventadosProducto: item.precios ? item.precios.precioventadosProducto : null,
+        precioventatresProducto: item.precios ? item.precios.precioventatresProducto : null,
+        precioventacuatroProducto: item.precios ? item.precios.precioventacuatroProducto : null,
+      });
+      const lista = Array.isArray(data) ? data : [data];
+      setResultados(lista.map(mapRow));
       setBuscado(true);
     } catch (err) {
       const msg =
@@ -129,7 +104,7 @@ function ConsultarCostosReales() {
               <InputGroup className="mb-3">
                 <Form.Control
                   type="text"
-                  placeholder="Ej: REL-001"
+                  placeholder="Ej:0280020021"
                   value={codigoRelix}
                   onChange={(e) => setCodigoRelix(e.target.value)}
                   autoFocus
@@ -164,7 +139,7 @@ function ConsultarCostosReales() {
                 <p className="text-success fw-bold text-uppercase">
                   {resultados.length} resultado(s) encontrado(s)
                 </p>
-                <Box sx={{ height: 400, width: "100%" }}>
+                <Box sx={{ height: 300, width: "100%" }}>
                   <DataGrid
                     columns={columns}
                     rows={resultados}

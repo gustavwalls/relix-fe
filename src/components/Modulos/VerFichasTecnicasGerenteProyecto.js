@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import clienteAxios from "../../config/axios";
 import authContext from "../../context/autenticacion/authContext";
 
-import { Accordion, Button, Form } from "react-bootstrap";
+import { Accordion, Button, Form, Modal } from "react-bootstrap";
 import {
   peticionObtenerModulos,
   peticionObtenerPartidas,
@@ -54,6 +54,8 @@ function VerFichasTecnicasGerenteProyecto() {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const [show3, setShow3] = useState(false);
+  const [showBackupModal, setShowBackupModal] = useState(false);
+  const [showAdvertencia, setShowAdvertencia] = useState(false);
   /////
   const [modulos, setModulos] = useState([]);
   const [partidas, setPartidas] = useState([]);
@@ -94,6 +96,7 @@ function VerFichasTecnicasGerenteProyecto() {
     console.log("usuario de ficha tecnica ->", ficha.idUsuario);
     setidUsuarioFichaTecnica(ficha.idUsuario);
     setFichaTecnica(ficha);
+    setShowAdvertencia(false);
     obtenerDetalleTecnicasIngeniero(ficha.idFichatecnica);
     obtenerModulos(ficha.idFichatecnica);
     // obtenerPartidas(ficha.idFichatecnica);
@@ -896,7 +899,7 @@ function VerFichasTecnicasGerenteProyecto() {
     }
   };
 
-  const aprobarCotizacion = () => {
+  const flujoNormalAprobarCotizacion = () => {
     Swal.fire({
       title: "Solicitar a gerencia general:",
       html: `<input type="text" id="mensaje" className="swal2-input" placeholder="Mensaje">
@@ -911,6 +914,14 @@ function VerFichasTecnicasGerenteProyecto() {
     }).then((result) => {
       console.log(result);
     });
+  };
+
+  const aprobarCotizacion = () => {
+    if (fichaTecnica.actualizarPreciosCostos == 1) {
+      setShowAdvertencia(true);
+      return;
+    }
+    flujoNormalAprobarCotizacion();
   };
 
   const GuardarAprobarCotizacion = async (mensaje, idFichaTecnica) => {
@@ -1128,6 +1139,58 @@ function VerFichasTecnicasGerenteProyecto() {
                         3. Para decimales usar solo el "." (punto)
                       </p>
                     </div>
+                    {showAdvertencia && (
+                    <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
+                      <div
+                        style={{
+                          border: "2px solid #ffc107",
+                          borderRadius: "12px",
+                          backgroundColor: "#fff8e1",
+                          padding: "20px 24px",
+                          boxShadow: "0 4px 12px rgba(255,193,7,0.25)",
+                          width: "100%",
+                        }}
+                      >
+                        <div className="d-flex align-items-center mb-2">
+                          <span style={{ fontSize: "1.6rem", marginRight: "10px" }}>⚠️</span>
+                          <span
+                            className="fw-bold text-uppercase"
+                            style={{ color: "#856404", fontSize: "0.95rem" }}
+                          >
+                            Advertencia
+                          </span>
+                        </div>
+                        <p
+                          className="mb-1 fw-bold"
+                          style={{ color: "#333", fontSize: "0.95rem" }}
+                        >
+                          Proyecto creado en noviembre
+                        </p>
+                        <p
+                          className="mb-3"
+                          style={{ color: "#555", fontSize: "0.9rem" }}
+                        >
+                          ¿Desea actualizar los precios?
+                        </p>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-warning btn-sm fw-bold text-uppercase"
+                            style={{ minWidth: "90px" }}
+                            onClick={() => setShowBackupModal(true)}
+                          >
+                            Aceptar
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-sm text-uppercase"
+                            style={{ minWidth: "90px" }}
+                            onClick={() => setShowAdvertencia(false)}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    )}
                   </div>
                 )}
 
@@ -1529,6 +1592,56 @@ function VerFichasTecnicasGerenteProyecto() {
         dataModalSubPartidasIng={dataModalSubPartidasIng}
         fichaTecnica={fichaTecnica}
       />
+      <Modal show={showBackupModal} onHide={() => setShowBackupModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="text-uppercase fw-bold">
+            Copia de seguridad
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-uppercase fw-bold">
+            ¿Desea guardar una copia de seguridad?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="success"
+            onClick={async () => {
+              try {
+                await clienteAxios.post(
+                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
+                  { indCopiaSeguridad: 1 }
+                );
+              } catch (error) {
+                console.log("Error al actualizar precios-costos:", error);
+              }
+              setShowBackupModal(false);
+              setShowAdvertencia(false);
+              flujoNormalAprobarCotizacion();
+            }}
+          >
+            Sí
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              try {
+                await clienteAxios.post(
+                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
+                  { indCopiaSeguridad: 0 }
+                );
+              } catch (error) {
+                console.log("Error al actualizar precios-costos:", error);
+              }
+              setShowBackupModal(false);
+              setShowAdvertencia(false);
+              flujoNormalAprobarCotizacion();
+            }}
+          >
+            No
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
