@@ -240,7 +240,7 @@ function VerDescargaDeArchivos() {
          columns={columns}
          rows={rows}
          pageSize={15}
-         rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
          getRowHeight={() => "auto"}
          //checkboxSelection
          // disableSelectionOnClick

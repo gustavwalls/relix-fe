@@ -218,7 +218,7 @@ function ReporteAnalisis() {
               columns={columns}
               rows={rows}
               pageSize={15}
-              rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
               checkboxSelection
               disableSelectionOnClick
             />

@@ -272,7 +272,7 @@ function VerFichasTecnicasDiseñador() {
                     //columns={[{ field: "idDetallefichatecnica" }]}
                     rows={rows}
                     pageSize={15}
-                    rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                     // checkboxSelection
                     //disableSelectionOnClick
                   />

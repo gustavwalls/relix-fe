@@ -1547,7 +1547,7 @@ function VerFichasTecnicasBackoffice() {
                         columns={columns}
                         rows={rows}
                         pageSize={15}
-                        rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                         checkboxSelection
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
@@ -1605,7 +1605,7 @@ function VerFichasTecnicasBackoffice() {
                             columns={columnsModulos}
                             rows={rowsModulos}
                             pageSize={15}
-                            rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                             //checkboxSelection
                             // disableSelectionOnClick
                             style={{ height: "100%", width: "100%" }}

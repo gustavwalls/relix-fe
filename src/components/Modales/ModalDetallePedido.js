@@ -284,6 +284,7 @@ function ModalDetallePedido({ id, obtenerDatosTablaReporte }) {
                         columns={columns}
                         rows={rows}
                         pageSize={15}
+                          rowsPerPageOptions={[15]}
                         checkboxSelection
                         onSelectionModelChange={(ids) => {
                           const selectedIDs = new Set(ids);

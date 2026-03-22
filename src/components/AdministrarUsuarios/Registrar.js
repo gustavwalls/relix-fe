@@ -350,13 +350,13 @@ function Registrar() {
                 <hr />
               </div> */}
 
-              <row>
+              <div>
                 {!error ? (
                   <span className="text-danger">{error}</span>
                 ) : (
                   <span className="text-danger text-uppercase">{error}</span>
                 )}
-              </row>
+              </div>
               <div className="row">
                 <div
                   className="col-12 col-lg-12"
@@ -444,14 +444,13 @@ function Registrar() {
                             Rol
                           </Form.Label>
                           <Form.Select
-                            defaultValue="Seleccione"
                             name="idRol"
                             value={idRol}
                             onChange={(e) => {
                               actualizarInput(e);
                             }}
                           >
-                            <option value="" selected disabled hidden>
+                            <option value="" disabled hidden>
                               Seleccione
                             </option>
                             {roles &&
@@ -633,7 +632,6 @@ function Registrar() {
                   <br />
                   <label>Rol</label>
                   <Form.Select
-                    defaultValue="Seleccione"
                     name="idRol"
                     value={registrarUsuario && registrarUsuario.idRol}
                     onChange={(e) => {
@@ -646,7 +644,6 @@ function Registrar() {
                           <option
                             key={i}
                             value={usuario.idRol}
-                            selected
                             onChange={(e) => {
                               actualizarInput(e);
                             }}

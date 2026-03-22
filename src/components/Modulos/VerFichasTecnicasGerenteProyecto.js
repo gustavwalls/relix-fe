@@ -13,7 +13,7 @@ import {
 import Card from "react-bootstrap/Card";
 import { DataGrid } from "@mui/x-data-grid";
 import { BsNewspaper } from "react-icons/bs";
-import { BsFillEmojiLaughingFill } from "react-icons/bs";
+import { BsExclamationTriangleFill } from "react-icons/bs";
 import { BsFillEmojiFrownFill } from "react-icons/bs";
 import { MdPageview } from "react-icons/md";
 import { BiSave } from "react-icons/bi";
@@ -44,7 +44,6 @@ function VerFichasTecnicasGerenteProyecto() {
   const [detalleGeneral, setDetalleGeneral] = useState([]);
   const [detalleModulos, setDetalleModulos] = useState([]);
   const [fichaTecnica, setFichaTecnica] = useState({});
-  const { envio_ingeniero_fichatecnica } = fichaTecnica;
   const [fichasTecnicasIngeniero, setFichasTecnicasIngeniero] = useState([]);
   const [idUsuarioFichaTecnica, setidUsuarioFichaTecnica] = useState("");
   ////MOSTRAR FICHA
@@ -834,81 +833,23 @@ function VerFichasTecnicasGerenteProyecto() {
     }
   };
 
-  const EnviarguardadoCotizacion = async () => {
-    //guardar cotizacion
-
-    Swal.fire({
-      //  title: `"Solicitar a gerente de proyectos:"`,
-      title: `${
-        nombreRol == "Gerente de Proyecto"
-          ? "Solicitar a gerencia general:"
-          : "Solicitar a gerente de proyectos:"
-      }`,
-      html: `<input type="text" id="mensaje" className="swal2-input" placeholder="Mensaje">
-    `,
-      confirmButtonText: "Enviar mensaje",
-      focusConfirm: false,
-      preConfirm: () => {
-        const mensaje = Swal.getPopup().querySelector("#mensaje").value;
-
-        return guardarCotizacion(mensaje, fichaTecnica.idFichatecnica);
-      },
-    }).then((result) => {
-      console.log(result);
-    });
-  };
-
-  const guardarCotizacion = async (mensaje, idFichaTecnica) => {
-    console.log("hola??");
-    //mensaje
-    // console.log("en guardarCotizacion el id es", idFichaTecnica);
-    // console.log(mensaje, idFichaTecnica);
-
-    const datos = {
-      idfichatecnica: idFichaTecnica,
-      mensaje: mensaje,
-      id_usuario: idUsuario,
-    };
-    try {
-      const resultado = await clienteAxios.put(
-        "/GuardarCotizacionIngeniero",
-        datos
-      );
-      /*  const resultado = await clienteAxios.put(
-        "/detallefichatecnica",
-        idFichaTecnica
-      ); */
-      // console.log("resultado de guardarCotizacion", resultado);
-      console.log("resultado de guardarCotizacion", resultado.data); //me regresa objeto de ficha tecnica con valores cambiados
-      setFichaTecnica(resultado.data);
-      obtenerFichasTecnicasIngeniero(idUsuario);
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: `Guardado exitoso !`,
-        showConfirmButton: false,
-        timer: 2700,
-      });
-    } catch (error) {
-      // console.log(error.response.data.messages.error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        html: `<b> ${error.response.data.messages.error}</b>`,
-      });
-    }
-  };
-
   const flujoNormalAprobarCotizacion = () => {
     Swal.fire({
-      title: "Solicitar a gerencia general:",
-      html: `<input type="text" id="mensaje" className="swal2-input" placeholder="Mensaje">
-    `,
+      title: nombreRol == "Gerente de Proyecto" ? "Solicitar a gerencia general:" : "Solicitar a gerente de proyectos:",
+      html: `<textarea id="mensaje" class="swal2-textarea" placeholder="Mensaje" style="width:100%;height:120px;resize:vertical;box-sizing:border-box;margin:0;"></textarea>`,
+      width: 500,
       confirmButtonText: "Enviar mensaje",
       focusConfirm: false,
       preConfirm: () => {
         const mensaje = Swal.getPopup().querySelector("#mensaje").value;
-
+        if (!mensaje || !mensaje.trim()) {
+          Swal.showValidationMessage("El mensaje no puede estar vacío");
+          return false;
+        }
+        if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9 .,;:()\-]+$/.test(mensaje.trim())) {
+          Swal.showValidationMessage("El mensaje contiene caracteres no permitidos");
+          return false;
+        }
         return GuardarAprobarCotizacion(mensaje, fichaTecnica.idFichatecnica);
       },
     }).then((result) => {
@@ -917,10 +858,6 @@ function VerFichasTecnicasGerenteProyecto() {
   };
 
   const aprobarCotizacion = () => {
-    if (fichaTecnica.actualizarPreciosCostos == 1) {
-      setShowAdvertencia(true);
-      return;
-    }
     flujoNormalAprobarCotizacion();
   };
 
@@ -1164,7 +1101,10 @@ function VerFichasTecnicasGerenteProyecto() {
                           className="mb-1 fw-bold"
                           style={{ color: "#333", fontSize: "0.95rem" }}
                         >
-                          Proyecto creado en noviembre
+                          Proyecto creado en{" "}
+                          {fichaTecnica.created_at
+                            ? new Date(fichaTecnica.created_at).toLocaleDateString("es-ES", { month: "long", year: "numeric" }).replace(" de ", "-").replace(/^\w/, function(c) { return c.toUpperCase(); })
+                            : "fecha desconocida"}
                         </p>
                         <p
                           className="mb-3"
@@ -1413,13 +1353,22 @@ function VerFichasTecnicasGerenteProyecto() {
 
                     {/*   FIN DESCUENTO SUBPARTIDA */}
                     <div className="row mb-3">
-                      <div className="col-12 col-sm-2 my-1">
+                      <div className="col-12 col-sm-auto my-1 d-flex gap-2 flex-wrap">
                         <button
                           className="btn btn-warning text-uppercase"
                           onClick={() => aprobarCotizacion()}
                         >
                           aprobar cotizacion
                         </button>
+                        {fichaTecnica.actualizarPreciosCostos == 1 && (
+                          <button
+                            className="btn btn-warning btn-sm text-uppercase"
+                            onClick={() => setShowAdvertencia(true)}
+                          >
+                            <BsExclamationTriangleFill className="h3 m-0 p-0 pe-1" />
+                            Actualizar precios
+                          </button>
+                        )}
                       </div>
 
                       {idUsuario == idUsuarioFichaTecnica ? (
@@ -1523,7 +1472,7 @@ function VerFichasTecnicasGerenteProyecto() {
                           columns={columns}
                           rows={rows}
                           pageSize={15}
-                          rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                           getCellClassName={(params) => {
                             /*  if (params.field === 'city' || params.value == null) {
                              return '';
@@ -1560,7 +1509,7 @@ function VerFichasTecnicasGerenteProyecto() {
                       columns={columnsModulos}
                       rows={rowsModulos}
                       pageSize={15}
-                      rowsPerPageOptions={[5]}
+                      rowsPerPageOptions={[15]}
                       //checkboxSelection
                       // disableSelectionOnClick
                       style={{ height: "100%", width: "100%" }}
@@ -1617,7 +1566,19 @@ function VerFichasTecnicasGerenteProyecto() {
               }
               setShowBackupModal(false);
               setShowAdvertencia(false);
-              flujoNormalAprobarCotizacion();
+              try {
+                const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
+                if (respuesta.data) {
+                  setFichasTecnicasIngeniero(respuesta.data);
+                  const fichaActualizada = respuesta.data.find(function(f) { return f.idFichatecnica === fichaTecnica.idFichatecnica; });
+                  if (fichaActualizada) {
+                    setFichaTecnica(fichaActualizada);
+                    setMostarFicha(true);
+                  }
+                }
+              } catch (error) {
+                console.log("Error al recargar fichas:", error);
+              }
             }}
           >
             Sí
@@ -1635,7 +1596,19 @@ function VerFichasTecnicasGerenteProyecto() {
               }
               setShowBackupModal(false);
               setShowAdvertencia(false);
-              flujoNormalAprobarCotizacion();
+              try {
+                const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
+                if (respuesta.data) {
+                  setFichasTecnicasIngeniero(respuesta.data);
+                  const fichaActualizada = respuesta.data.find(function(f) { return f.idFichatecnica === fichaTecnica.idFichatecnica; });
+                  if (fichaActualizada) {
+                    setFichaTecnica(fichaActualizada);
+                    setMostarFicha(true);
+                  }
+                }
+              } catch (error) {
+                console.log("Error al recargar fichas:", error);
+              }
             }}
           >
             No

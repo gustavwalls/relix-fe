@@ -372,7 +372,7 @@ function ModalRegistrarRqPedido({ selectedRows, fichaTecnica,obtenerDatosTablaRe
                           columns={columns}
                           rows={rows}
                           pageSize={15}
-                          rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                           experimentalFeatures={{ newEditingApi: true }}
                           /*  checkboxSelection
                       disableSelectionOnClick */

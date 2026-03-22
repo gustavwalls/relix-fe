@@ -306,7 +306,8 @@ function ModalProductosGlobales({ id ,obtenerDatosTablaReporte}) {
                     productos.length > 0 ?
                     (
                       <>
-                      <DataGrid columns={columns} rows={rows} pageSize={15} checkboxSelection
+                      <DataGrid columns={columns} rows={rows} pageSize={15}
+                          rowsPerPageOptions={[15]} checkboxSelection
                   onSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
                     const selectedRows = rows.filter((row) =>

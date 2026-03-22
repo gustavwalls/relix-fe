@@ -347,8 +347,8 @@ let id = ficha.idFichatecnica
                   columns={columns}
                   rows={rows}
                   pageSize={15}
+                          rowsPerPageOptions={[15]}
                   checkboxSelection
-                  rowsPerPageOptions={[5]}
                   onSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
                     const selectedRows = rows.filter((row) =>

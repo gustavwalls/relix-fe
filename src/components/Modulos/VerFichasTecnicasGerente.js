@@ -1062,7 +1062,7 @@ function VerFichasTecnicasGerente() {
                         columns={columns}
                         rows={rows}
                         pageSize={15}
-                        rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                         //checkboxSelection
                         // disableSelectionOnClick
                       />
@@ -1085,7 +1085,7 @@ function VerFichasTecnicasGerente() {
                             columns={columnsModulos}
                             rows={rowsModulos}
                             pageSize={15}
-                            rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                             //checkboxSelection
                             // disableSelectionOnClick
                             style={{ height: "100%", width: "100%" }}

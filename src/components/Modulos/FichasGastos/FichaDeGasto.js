@@ -201,7 +201,7 @@ function FichaDeGasto({
                   columns={columns}
                   rows={rowsPrimeraFila}
                   pageSize={15}
-                  rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                   //checkboxSelection
                   disableSelectionOnClick
                 />
@@ -221,7 +221,7 @@ function FichaDeGasto({
                   columns={columns}
                   rows={rows2}
                   pageSize={15}
-                  rowsPerPageOptions={[5]}
+                          rowsPerPageOptions={[15]}
                   //checkboxSelection
                   disableSelectionOnClick
                 />
