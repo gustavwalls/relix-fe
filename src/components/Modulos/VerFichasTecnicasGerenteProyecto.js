@@ -55,6 +55,7 @@ function VerFichasTecnicasGerenteProyecto() {
   const [show3, setShow3] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
   const [showAdvertencia, setShowAdvertencia] = useState(false);
+  const [resultadoActualizacion, setResultadoActualizacion] = useState(null);
   /////
   const [modulos, setModulos] = useState([]);
   const [partidas, setPartidas] = useState([]);
@@ -96,6 +97,7 @@ function VerFichasTecnicasGerenteProyecto() {
     setidUsuarioFichaTecnica(ficha.idUsuario);
     setFichaTecnica(ficha);
     setShowAdvertencia(false);
+    setResultadoActualizacion(null);
     obtenerDetalleTecnicasIngeniero(ficha.idFichatecnica);
     obtenerModulos(ficha.idFichatecnica);
     // obtenerPartidas(ficha.idFichatecnica);
@@ -1131,6 +1133,57 @@ function VerFichasTecnicasGerenteProyecto() {
                       </div>
                     </div>
                     )}
+                    {resultadoActualizacion && (
+                      <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
+                        <div
+                          style={{
+                            border: resultadoActualizacion.tipo === "success" ? "2px solid #28a745" : resultadoActualizacion.tipo === "warning" ? "2px solid #ffc107" : "2px solid #dc3545",
+                            borderRadius: "12px",
+                            backgroundColor: resultadoActualizacion.tipo === "success" ? "#f0fff4" : resultadoActualizacion.tipo === "warning" ? "#fff8e1" : "#fff5f5",
+                            padding: "20px 24px",
+                            boxShadow: resultadoActualizacion.tipo === "success" ? "0 4px 12px rgba(40,167,69,0.2)" : resultadoActualizacion.tipo === "warning" ? "0 4px 12px rgba(255,193,7,0.25)" : "0 4px 12px rgba(220,53,69,0.2)",
+                            width: "100%",
+                          }}
+                        >
+                          <div className="d-flex align-items-center mb-2">
+                            <span style={{ fontSize: "1.6rem", marginRight: "10px" }}>
+                              {resultadoActualizacion.tipo === "success" ? "✅" : resultadoActualizacion.tipo === "warning" ? "⚠️" : "❌"}
+                            </span>
+                            <span
+                              className="fw-bold text-uppercase"
+                              style={{
+                                color: resultadoActualizacion.tipo === "success" ? "#155724" : resultadoActualizacion.tipo === "warning" ? "#856404" : "#721c24",
+                                fontSize: "0.95rem",
+                              }}
+                            >
+                              {resultadoActualizacion.tipo === "success" ? "Actualización exitosa" : resultadoActualizacion.tipo === "warning" ? "Se encontraron estos errores" : "Error al actualizar"}
+                            </span>
+                          </div>
+                          {resultadoActualizacion.tipo === "success" && (
+                            <p className="mb-0" style={{ color: "#333", fontSize: "0.9rem" }}>
+                              Precios y costos actualizados correctamente.
+                            </p>
+                          )}
+                          {resultadoActualizacion.tipo === "error" && (
+                            <p className="mb-0" style={{ color: "#333", fontSize: "0.9rem" }}>
+                              Ocurrió un error al actualizar los precios y costos.
+                            </p>
+                          )}
+                          {resultadoActualizacion.tipo === "warning" && resultadoActualizacion.errores.length > 0 && (
+                            <ul className="mb-0 ps-3" style={{ color: "#555", fontSize: "0.9rem" }}>
+                              {resultadoActualizacion.errores.map(function(e, i) { return <li key={i}>{e}</li>; })}
+                            </ul>
+                          )}
+                          <button
+                            className="btn btn-outline-secondary btn-sm text-uppercase mt-3"
+                            style={{ minWidth: "90px" }}
+                            onClick={function() { setResultadoActualizacion(null); }}
+                          >
+                            Cerrar
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -1556,16 +1609,19 @@ function VerFichasTecnicasGerenteProyecto() {
           <Button
             variant="success"
             onClick={async () => {
+              setShowBackupModal(false);
+              setShowAdvertencia(false);
               try {
-                await clienteAxios.post(
+                const res = await clienteAxios.post(
                   `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
                   { indCopiaSeguridad: 1 }
                 );
+                const errores = (res.data && res.data.errores) ? res.data.errores : [];
+                setResultadoActualizacion({ tipo: errores.length > 0 ? "warning" : "success", errores: errores });
               } catch (error) {
                 console.log("Error al actualizar precios-costos:", error);
+                setResultadoActualizacion({ tipo: "error", errores: [] });
               }
-              setShowBackupModal(false);
-              setShowAdvertencia(false);
               try {
                 const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
                 if (respuesta.data) {
@@ -1586,16 +1642,19 @@ function VerFichasTecnicasGerenteProyecto() {
           <Button
             variant="secondary"
             onClick={async () => {
+              setShowBackupModal(false);
+              setShowAdvertencia(false);
               try {
-                await clienteAxios.post(
+                const res = await clienteAxios.post(
                   `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
                   { indCopiaSeguridad: 0 }
                 );
+                const errores = (res.data && res.data.errores) ? res.data.errores : [];
+                setResultadoActualizacion({ tipo: errores.length > 0 ? "warning" : "success", errores: errores });
               } catch (error) {
                 console.log("Error al actualizar precios-costos:", error);
+                setResultadoActualizacion({ tipo: "error", errores: [] });
               }
-              setShowBackupModal(false);
-              setShowAdvertencia(false);
               try {
                 const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
                 if (respuesta.data) {
