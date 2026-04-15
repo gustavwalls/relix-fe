@@ -40,10 +40,19 @@ function EdicionesFichasTecnicas() {
     obtenerTodasLasFichasTecnicas();
   }, []);
 
+
   const [mostarFicha, setMostarFicha] = useState(false);
-  const btnVerTabla = (ficha, indice) => {
+  const btnVerTabla = async (ficha, indice) => {
     console.log("ver ficha", ficha);
-    setFichaTecnica(ficha);
+    try {
+      const { data } = await clienteAxios.get("/api/v1/formas-pagos");
+      const match = data.find(function (f) { return f.codFormaPago === ficha.NIDE_FORMA_PAGO; });
+      const fichaConFormaPago = match ? Object.assign({}, ficha, { idFormaPago: match.idFormaPago }) : ficha;
+      setFichaTecnica(fichaConFormaPago);
+    } catch (error) {
+      console.log("Error al obtener formas de pago", error);
+      setFichaTecnica(ficha);
+    }
     setMostarFicha(true);
     let lista = document.querySelectorAll(".cambiarcolores");
     lista.forEach((item, i) => {
@@ -80,7 +89,7 @@ function EdicionesFichasTecnicas() {
         )}
       </div>
       {mostarFicha && (
-        <FichaTecnica fichaTecnica={fichaTecnica} idFichaTecnica={fichaTecnica.idFichatecnica} idDepartamento={idDepartamento} idProvincia={idProvincia} setMostarFicha={setMostarFicha} obtenerTodasLasFichasTecnicas={obtenerTodasLasFichasTecnicas}/>
+        <FichaTecnica key={fichaTecnica.idFichatecnica} fichaTecnica={fichaTecnica} idFichaTecnica={fichaTecnica.idFichatecnica} idDepartamento={idDepartamento} idProvincia={idProvincia} setMostarFicha={setMostarFicha} obtenerTodasLasFichasTecnicas={obtenerTodasLasFichasTecnicas}/>
       )}
     </div>
   </>

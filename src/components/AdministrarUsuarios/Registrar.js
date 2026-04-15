@@ -342,14 +342,8 @@ function Registrar() {
         </TabList>
 
         <TabPanel value="1">
-          {" "}
           <div className="d-flex justify-content-center align-items-center ">
             <div className="container">
-              {/*  <div className="row">
-                <h2 className="text-primary mb-4 text-uppercase">Registrar un Usuario</h2>
-                <hr />
-              </div> */}
-
               <div>
                 {!error ? (
                   <span className="text-danger">{error}</span>

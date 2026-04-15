@@ -53,6 +53,7 @@ export default function FichaTecnica({
   const [departamentos, setDepartamentos] = useState([]);
   const [provincias, setProvincias] = useState([]);
   const [distritos, setDistritos] = useState([]);
+  const [formasPago, setFormasPago] = useState([]);
   useEffect(() => {
     getData();
   }, []);
@@ -63,6 +64,14 @@ export default function FichaTecnica({
     handleSelectChangeProvincia(idDepartamento);
     handleSelectChangeDistrito(idProvincia);
   }, [fichaTecnica, setValue]);
+
+  React.useEffect(() => {
+    if (formasPago.length > 0 && fichaTecnica && fichaTecnica.NIDE_FORMA_PAGO) {
+      setValue("NIDE_FORMA_PAGO", fichaTecnica.NIDE_FORMA_PAGO);
+    }
+  }, [formasPago]);
+
+
 
   function insertar(data) {
     if (!fichaTecnica) {
@@ -104,12 +113,13 @@ export default function FichaTecnica({
     }
     setLoading(false);
   };
-  const editarFichaTecnica = async (fichaTecnica) => {
-       try {
+  const editarFichaTecnica = async (datos) => {
+    var datosAEnviar = Object.assign({}, fichaTecnica, datos);
+    try {
       setLoading(true)
       const resultado = await clienteAxios.put(
         `/api/fichatecnica/${idFichaTecnica}`,
-        fichaTecnica
+        datosAEnviar
       );
       setLoading(false)
       Swal.fire({
@@ -146,6 +156,8 @@ export default function FichaTecnica({
       setDepartamentos(todosLosDepartamentos);
       const todosLosEstados = await obtenerEstados();
       setEstados(todosLosEstados);
+      const respuestaFormasPago = await clienteAxios.get("/api/v1/formas-pagos");
+      setFormasPago(respuestaFormasPago.data.filter((f) => f.flgEstado === "1" || f.flgEstado === 1));
     } catch (error) {
       setLoading(false);
       console.log("erro", error);
@@ -576,7 +588,7 @@ export default function FichaTecnica({
                         aria-label="Default select example"
                         defaultValue={""}
                         disabled={distritos.length === 0}
-                        {...register("idDistrito", { required: false })}
+                        {...register("idDistrito", { required: true })}
                       >
                         <option value="" disabled>
                           Seleccione
@@ -638,6 +650,7 @@ export default function FichaTecnica({
                       <Form.Label> Area (Has):</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Ingrese cantidad de hectareas"
                         {...register("areaFichatecnica", { required: true })}
                       />
@@ -908,6 +921,7 @@ export default function FichaTecnica({
                       <Form.Label> %:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="%"
                         {...register("porcentajeanticipoFichatecnica", {
                           required: true,
@@ -925,6 +939,7 @@ export default function FichaTecnica({
                       <Form.Label> Saldo:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Ingrese Saldo"
                         {...register("idFormapago", {
                           required: true,
@@ -971,6 +986,7 @@ export default function FichaTecnica({
                       <Form.Label> Tasa:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Tasa"
                         {...register("tasaFichatecnica", {
                           required: true,
@@ -989,6 +1005,7 @@ export default function FichaTecnica({
                       <Form.Label> Periodo de Gracia:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Periodo de Gracia"
                         {...register("periodograciaFichatecnica", {
                           required: true,
@@ -1008,6 +1025,7 @@ export default function FichaTecnica({
                       <Form.Label> Plazo:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Plazo"
                         {...register("plazoFichatecnica", {
                           required: true,
@@ -1109,6 +1127,25 @@ export default function FichaTecnica({
                             Letras anticipadas es obligatorio
                           </span>
                         )}
+                    </Form.Group>
+                  </div>
+                  <div className="col-12 col-sm-6  col-lg-3">
+                    <Form.Group>
+                      <Form.Label>Forma de Pago:</Form.Label>
+                      <Form.Select
+                        aria-label="Default select example"
+                        defaultValue={""}
+                        {...register("NIDE_FORMA_PAGO", { required: true })}
+                      >
+                        <option value="" disabled>
+                          Seleccione
+                        </option>
+                        {formasPago.map((forma) => (
+                          <option key={forma.idFormaPago} value={forma.idFormaPago}>
+                            {forma.desFormaPago}
+                          </option>
+                        ))}
+                      </Form.Select>
                     </Form.Group>
                   </div>
                 </div>
@@ -1342,6 +1379,7 @@ export default function FichaTecnica({
                       <Form.Label> Costos del Proyecto USD:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Costos del Proyecto USD"
                         {...register("costoproyectoFichatecnica", {
                           required: true,
@@ -1362,6 +1400,7 @@ export default function FichaTecnica({
                       <Form.Label> Margen %:</Form.Label>
                       <Form.Control
                         type="number"
+                        step="0.00001"
                         placeholder="Margen %"
                         {...register("margenFichatecnica", {
                           required: true,
@@ -1420,6 +1459,11 @@ export default function FichaTecnica({
                       ? "Editar Ficha Tecnica"
                       : "Crear Ficha Tecnica"}
                   </button>
+                  {Object.keys(errors).length > 0 && (
+                    <div className="alert alert-danger mt-2" role="alert">
+                      Hay campos obligatorios sin completar. Por favor revisa todas las pestañas antes de guardar.
+                    </div>
+                  )}
                 </div>
               </div>
             </Tab>

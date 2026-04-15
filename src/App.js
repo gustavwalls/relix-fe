@@ -39,6 +39,9 @@ import GuiaValorizacion from "./components/Modulos/Modulo-Guias/GuiaValorizacion
 import VerFichasTecnicasGerenteProyecto from "./components/Modulos/VerFichasTecnicasGerenteProyecto";
 import FichaTecnica from "./components/Modulos/Modulo-Comercial/FichaTecnica/FichaTecnica";
 import ConsultarCostosReales from "./components/Modulos/ConsultarCostosReales";
+import FormasDePago from "./components/Modulos/FormasDePago";
+import AdministracionCorreos from "./components/Modulos/AdministracionCorreos";
+import AdministracionCorreosDetalle from "./components/Modulos/AdministracionCorreosDetalle";
 
 
 function App() {
@@ -282,6 +285,30 @@ function App() {
                 element={
                   <PrivateRoute>
                     <ConsultarCostosReales />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/formas-de-pago"
+                element={
+                  <PrivateRoute>
+                    <FormasDePago />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/administracion-correos"
+                element={
+                  <PrivateRoute>
+                    <AdministracionCorreos />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/administracion-correos/:id"
+                element={
+                  <PrivateRoute>
+                    <AdministracionCorreosDetalle />
                   </PrivateRoute>
                 }
               />

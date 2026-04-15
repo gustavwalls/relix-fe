@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 import clienteAxios from "../../../config/axios";
 
 
@@ -12,7 +11,7 @@ const peticionObtenerRoles = async () => {
   };
   const peticionObtenerAcciones= async () => {
     try {
-      const { data } = await clienteAxios.get("api/ModuloSistema");
+      const { data } = await clienteAxios.get("api/v1/modulos-sistemas");
       return data;
     } catch (error) {
       console.log(error);

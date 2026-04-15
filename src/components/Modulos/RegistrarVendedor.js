@@ -273,10 +273,10 @@ function RegistrarVendedor() {
               </div>
             </div>
           </TabPanel>
-          <TabPanel value="3">
+          <TabPanel value="3" style={{ padding: 0 }}>
             <div className="row">
               <div className="col-12">
-                <table className="table">
+                <table className="table w-100">
                   <thead>
                     <tr>
                       <th>Usuario</th>

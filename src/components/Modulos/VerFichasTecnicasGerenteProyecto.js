@@ -32,12 +32,6 @@ function VerFichasTecnicasGerenteProyecto() {
   const autentificaciones = useContext(authContext);
   const { usuario } = autentificaciones;
 
-  if (!usuario) {
-    return null;
-  }
-
-  const { idUsuario, nombreRol } = usuario;
-
   //DETALLES
   const [detalleFichaTecnica, setDetalleFichaTecnica] = useState({});
   const [detalleTabla, setDetalleTabla] = useState([]);
@@ -73,10 +67,12 @@ function VerFichasTecnicasGerenteProyecto() {
   const [dataModalIng, setDataModalIng] = useState({});
   const [dataModalSubPartidasIng, setDataModalSubPartidasIng] = useState({});
 
-  const obtenerFichasTecnicasIngeniero = async (idUsuario) => {
+  const { idUsuario, nombreRol } = usuario || {};
+
+  const obtenerFichasTecnicasIngeniero = async (id) => {
     try {
       const respuesta = await clienteAxios.get(
-        `/api/FichaTecnicaIngeniero/${idUsuario}`
+        `/api/FichaTecnicaIngeniero/${id}`
       );
       setFichasTecnicasIngeniero(respuesta.data);
       return respuesta.data;
@@ -86,10 +82,15 @@ function VerFichasTecnicasGerenteProyecto() {
   };
 
   useEffect(() => {
+    if (!idUsuario) return;
     setTimeout(() => {
       obtenerFichasTecnicasIngeniero(idUsuario);
     }, 2500);
-  }, []);
+  }, [idUsuario]);
+
+  if (!usuario) {
+    return null;
+  }
 
   const btnVerTabla = (ficha, indice) => {
     console.log("haber la ficha", ficha, "id", ficha.idFichatecnica);
@@ -1454,8 +1455,7 @@ function VerFichasTecnicasGerenteProyecto() {
                           className="btn btn-warning btn btn-sm text-uppercase"
                           onClick={() => abrirModal()}
                         >
-                          <BsNewspaper className="h3 m-0 p-0 pe-1" /> Detalle
-                          general
+                          <BsNewspaper className="h3 m-0 p-0 pe-1" />Detalle general
                         </button>
                       </div>
                       <div className="col-12 col-sm-2 my-1">
