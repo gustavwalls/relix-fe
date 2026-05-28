@@ -23,6 +23,7 @@ export default (state, action) => {
       localStorage.setItem("user","" + action.payload.user.idUsuario);
       localStorage.setItem("nombreRol","" + action.payload.user.nombreRol);
       localStorage.setItem("token", "Bearer " + action.payload.Token);
+      localStorage.setItem("rutas", JSON.stringify(action.payload.user.rutas || []));
       
       return {
         ...state,
@@ -38,6 +39,8 @@ export default (state, action) => {
     case REGISTRO_ERROR:
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("nombreRol");
+      localStorage.removeItem("rutas");
       return {
         ...state,
         token: null,
@@ -85,6 +88,8 @@ export default (state, action) => {
     case CERRAR_SESION:
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("nombreRol");
+      localStorage.removeItem("rutas");
       return {
         ...state,
         autenticado: null,

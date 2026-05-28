@@ -110,9 +110,11 @@ function VerFichasTecnicasBackoffice() {
   
 
   /////////////////////////////////////////////////descuento por modulo
-  const btnVerTabla = async (ficha,i) => {
+  const [fichaSeleccionadaId, setFichaSeleccionadaId] = useState(null);
+  const btnVerTabla = async (ficha) => {
    // console.log("haber la ficha", ficha, "id", ficha.idFichatecnica);
     setFichaTecnica(ficha);
+    setFichaSeleccionadaId(ficha.idFichatecnica);
     obtenerDatosTablaReporte(ficha.idFichatecnica);
     setMostarFicha(true);
     obtenerModulos(ficha.idFichatecnica);
@@ -121,23 +123,6 @@ function VerFichasTecnicasBackoffice() {
       ficha.idFichatecnica
     );
     setListaDeRqs(variablePeticiones);
-    //  obtenerPartidas(ficha.idFichatecnica);
-    //  obtenerSubPartidas(ficha.idFichatecnica);
-    //  obtenerDatosTablaReporte(ficha.idFichatecnica);
-  };
-
-  const pintarCard = (indice) => {
-   // console.log("indice", indice);
-    let lista = document.querySelectorAll(".cambiarcolores");
-    lista.forEach((item, i) => {
-      if (i === indice) {
-        item.classList.add("bg-secondary");
-        item.classList.add("text-white");
-      } else {
-        item.classList.remove("bg-secondary");
-        item.classList.remove("text-white");
-      }
-    });
   };
 
   const [codigoRequerimientoDetalleReqPedido, setCodigoRequerimientoDetalleReqPedido] = useState('')
@@ -1149,6 +1134,7 @@ function VerFichasTecnicasBackoffice() {
         fichasTecnicas={fichasTecnicasBackoffice}
         btnVerTabla={btnVerTabla}
         sitio='backoffice'
+        fichaSeleccionadaId={fichaSeleccionadaId}
         />
       </div>
 

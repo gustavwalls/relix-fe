@@ -18,9 +18,12 @@ import {
   peticionObtenerPartidas,
   peticionObtenerSubPartidas,
 } from "../services/apisFichaTecnicaIngeniero";
+const ROLES_COSTOS_REALES = ["Backoffice", "Gerente General"];
+
 function VerFichasTecnicasGerente() {
   ///////////////////////////////////////////////////////////////////////////HOOKS
   const navigate = useNavigate();
+  const nombreRol = localStorage.getItem("nombreRol");
   const [fichasTecnicasGerente, setFichasTecnicasGerente] = useState([]);
   const [fichaTecnica, setFichaTecnica] = useState({});
   const [loading, setLoading] = useState(false);
@@ -761,16 +764,18 @@ function VerFichasTecnicasGerente() {
           </Accordion.Item>
         </Accordion>
       </div>
-      <div className="row mb-3">
-        <div className="col-12">
-          <button
-            className="btn btn-success btn-sm text-uppercase"
-            onClick={() => navigate("/consultar-costos-reales")}
-          >
-            Consultar costos reales
-          </button>
+      {ROLES_COSTOS_REALES.includes(nombreRol) && (
+        <div className="row mb-3">
+          <div className="col-12">
+            <button
+              className="btn btn-success btn-sm text-uppercase"
+              onClick={() => navigate("/consultar-costos-reales")}
+            >
+              Consultar costos reales
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       <div className="row">
         <div className="col-12 col-md-12 col-lg-12 col-xl-12 mb-3">
           {!mostarFicha ? (

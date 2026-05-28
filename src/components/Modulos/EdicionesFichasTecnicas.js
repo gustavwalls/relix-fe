@@ -42,8 +42,10 @@ function EdicionesFichasTecnicas() {
 
 
   const [mostarFicha, setMostarFicha] = useState(false);
-  const btnVerTabla = async (ficha, indice) => {
+  const [fichaSeleccionadaId, setFichaSeleccionadaId] = useState(null);
+  const btnVerTabla = async (ficha) => {
     console.log("ver ficha", ficha);
+    setFichaSeleccionadaId(ficha.idFichatecnica);
     try {
       const { data } = await clienteAxios.get("/api/v1/formas-pagos");
       const match = data.find(function (f) { return f.codFormaPago === ficha.NIDE_FORMA_PAGO; });
@@ -54,16 +56,6 @@ function EdicionesFichasTecnicas() {
       setFichaTecnica(ficha);
     }
     setMostarFicha(true);
-    let lista = document.querySelectorAll(".cambiarcolores");
-    lista.forEach((item, i) => {
-      if (i === indice) {
-        item.classList.add("bg-secondary");
-        item.classList.add("text-white");
-      } else {
-        item.classList.remove("bg-secondary");
-        item.classList.remove("text-white");
-      }
-    });
   };
   return (
     
@@ -74,6 +66,7 @@ function EdicionesFichasTecnicas() {
       <div className="row">
         <FichasTecnicasAcordeon title ='Fichas tecnicas para editar' loading={loading}
         fichasTecnicas={todasLasFichasTecnicas} btnVerTabla={btnVerTabla}
+        fichaSeleccionadaId={fichaSeleccionadaId}
         />
       </div>
       <div className="row">

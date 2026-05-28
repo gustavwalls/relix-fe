@@ -7,6 +7,7 @@ function FichasTecnicasAcordeon({
   loading,
   btnVerTabla,
   sitio,
+  fichaSeleccionadaId,
 }) {
   return (
     <div className="row">
@@ -25,9 +26,9 @@ function FichasTecnicasAcordeon({
                   Cargando Informacion...
                 </p>
               ) : fichasTecnicas.length > 0 ? (
-                fichasTecnicas.map((fichaTecnica, i) => (
-                  <div className="col-12 col-md-3 col-lg-3 mb-3" key={i}>
-                    <Card className="cambiarcolores">
+                fichasTecnicas.map((fichaTecnica) => (
+                  <div className="col-12 col-md-3 col-lg-3 mb-3" key={fichaTecnica.idFichatecnica}>
+                    <Card className={`cambiarcolores${fichaTecnica.idFichatecnica === fichaSeleccionadaId ? " bg-secondary text-white" : ""}`}>
                       <Card.Body>
                         <Card.Title className="text-uppercase">
                           <span>{fichaTecnica.nombreFichatecnica}</span>-{" "}
@@ -39,7 +40,7 @@ function FichasTecnicasAcordeon({
 
                         <Button
                           className="btn btn-success mx-2 py-0 text-uppercase"
-                          onClick={() => btnVerTabla(fichaTecnica, i)}
+                          onClick={() => btnVerTabla(fichaTecnica)}
                         >
                           Ver Lista de Materiales
                         </Button>

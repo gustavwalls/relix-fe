@@ -46,6 +46,7 @@ function VerFichasTecnicasIngeniero() {
   const [fichaTecnica, setFichaTecnica] = useState({});
   const { envio_ingeniero_fichatecnica } = fichaTecnica;
   const [fichasTecnicasIngeniero, setFichasTecnicasIngeniero] = useState([]);
+  const [fichaSeleccionadaId, setFichaSeleccionadaId] = useState(null);
   ////MOSTRAR FICHA
   const [mostarFicha, setMostarFicha] = useState(false);
 
@@ -96,26 +97,15 @@ function VerFichasTecnicasIngeniero() {
     }
   }, [idUsuario]);
 
-  const btnVerTabla = (ficha, indice) => {
+  const btnVerTabla = (ficha) => {
     console.log("haber la ficha", ficha, "id", ficha.idFichatecnica);
     setFichaTecnica(ficha);
+    setFichaSeleccionadaId(ficha.idFichatecnica);
     setShowAdvertencia(false);
     setResultadoActualizacion(null);
     obtenerDetalleTecnicasIngeniero(ficha.idFichatecnica);
     obtenerModulos(ficha.idFichatecnica);
-    // obtenerPartidas(ficha.idFichatecnica);
-    //obtenerSubPartidas(ficha.idFichatecnica);
     setMostarFicha(true);
-    let lista = document.querySelectorAll(".cambiarcolores");
-    lista.forEach((item, i) => {
-      if (i === indice) {
-        item.classList.add("bg-secondary");
-        item.classList.add("text-white");
-      } else {
-        item.classList.remove("bg-secondary");
-        item.classList.remove("text-white");
-      }
-    });
   };
 
   const obtenerDetalleTecnicasIngeniero = async (idFichaTecnica) => {
@@ -991,6 +981,7 @@ function VerFichasTecnicasIngeniero() {
         fichasTecnicas={fichasTecnicasIngeniero}
         btnVerTabla={btnVerTabla}
         sitio='ingeniero'
+        fichaSeleccionadaId={fichaSeleccionadaId}
         />
 
         <div className="col-12 col-md-12 col-lg-12 col-xl-12 mb-3">
@@ -1560,11 +1551,12 @@ function VerFichasTecnicasIngeniero() {
           <Button
             variant="success"
             onClick={async () => {
+              const idFichaActual = fichaTecnica.idFichatecnica;
               setShowBackupModal(false);
               setShowAdvertencia(false);
               try {
                 const res = await clienteAxios.post(
-                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
+                  `/api/fichas-tecnicas/${idFichaActual}/actualizar/precios-costos`,
                   { indCopiaSeguridad: 1 }
                 );
                 const errores = (res.data && res.data.errores) ? res.data.errores : [];
@@ -1577,48 +1569,21 @@ function VerFichasTecnicasIngeniero() {
                 const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
                 if (respuesta.data) {
                   setFichasTecnicasIngeniero(respuesta.data);
-                  const fichaActualizada = respuesta.data.find(function(f) { return f.idFichatecnica === fichaTecnica.idFichatecnica; });
-                  if (fichaActualizada) {
-                    setFichaTecnica(fichaActualizada);
-                    setMostarFicha(true);
-                  }
                 }
               } catch (error) {
                 console.log("Error al recargar fichas:", error);
               }
+              obtenerDetalleTecnicasIngeniero(idFichaActual);
+              obtenerModulos(idFichaActual);
             }}
           >
             Sí
           </Button>
           <Button
             variant="secondary"
-            onClick={async () => {
+            onClick={() => {
               setShowBackupModal(false);
               setShowAdvertencia(false);
-              try {
-                const res = await clienteAxios.post(
-                  `/api/fichas-tecnicas/${fichaTecnica.idFichatecnica}/actualizar/precios-costos`,
-                  { indCopiaSeguridad: 0 }
-                );
-                const errores = (res.data && res.data.errores) ? res.data.errores : [];
-                setResultadoActualizacion({ tipo: errores.length > 0 ? "warning" : "success", errores: errores });
-              } catch (error) {
-                console.log("Error al actualizar precios-costos:", error);
-                setResultadoActualizacion({ tipo: "error", errores: [] });
-              }
-              try {
-                const respuesta = await clienteAxios.get("/api/FichaTecnicaIngeniero/" + idUsuario);
-                if (respuesta.data) {
-                  setFichasTecnicasIngeniero(respuesta.data);
-                  const fichaActualizada = respuesta.data.find(function(f) { return f.idFichatecnica === fichaTecnica.idFichatecnica; });
-                  if (fichaActualizada) {
-                    setFichaTecnica(fichaActualizada);
-                    setMostarFicha(true);
-                  }
-                }
-              } catch (error) {
-                console.log("Error al recargar fichas:", error);
-              }
             }}
           >
             No

@@ -15,12 +15,12 @@ const columns = [
   { field: "marcaProducto", headerName: "Marca", width: 120 },
   { field: "familiaProducto", headerName: "Familia", width: 120 },
   { field: "proveedorProducto", headerName: "Proveedor", width: 150 },
-  { field: "costopromedioProducto", headerName: "Costo Promedio $", width: 150, align: "right", headerAlign: "right" },
-  { field: "costodisenoProducto", headerName: "Costo Diseño $", width: 140, align: "right", headerAlign: "right" },
+  { field: "costopromedioProducto", headerName: "Costo Real", width: 150, align: "right", headerAlign: "right" },
+/*   { field: "costodisenoProducto", headerName: "Costo Diseño $", width: 140, align: "right", headerAlign: "right" },
   { field: "precioventaunoProducto", headerName: "P. Venta 1 $", width: 120, align: "right", headerAlign: "right" },
   { field: "precioventadosProducto", headerName: "P. Venta 2 $", width: 120, align: "right", headerAlign: "right" },
   { field: "precioventatresProducto", headerName: "P. Venta 3 $", width: 120, align: "right", headerAlign: "right" },
-  { field: "precioventacuatroProducto", headerName: "P. Venta 4 $", width: 120, align: "right", headerAlign: "right" },
+  { field: "precioventacuatroProducto", headerName: "P. Venta 4 $", width: 120, align: "right", headerAlign: "right" }, */
 ];
 
 function ConsultarCostosReales() {

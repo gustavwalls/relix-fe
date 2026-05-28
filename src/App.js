@@ -283,7 +283,7 @@ function App() {
               <Route
                 path="/consultar-costos-reales"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute requiredRoles={["Backoffice", "Gerente General"]}>
                     <ConsultarCostosReales />
                   </PrivateRoute>
                 }
