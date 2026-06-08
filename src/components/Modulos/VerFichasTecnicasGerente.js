@@ -18,7 +18,7 @@ import {
   peticionObtenerPartidas,
   peticionObtenerSubPartidas,
 } from "../services/apisFichaTecnicaIngeniero";
-const ROLES_COSTOS_REALES = ["Backoffice", "Gerente General"];
+const ROLES_COSTOS_REALES = ["BackOffice", "Gerente General"];
 
 function VerFichasTecnicasGerente() {
   ///////////////////////////////////////////////////////////////////////////HOOKS
