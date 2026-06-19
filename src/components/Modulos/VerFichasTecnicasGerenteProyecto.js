@@ -828,7 +828,7 @@ function VerFichasTecnicasGerenteProyecto() {
 
   const flujoNormalAprobarCotizacion = () => {
     Swal.fire({
-      title: nombreRol == "Gerente de Proyecto" ? "Solicitar a gerencia general:" : "Solicitar a gerente de proyectos:",
+      title: "Solicitar a gerente general:",
       html: `<textarea id="mensaje" class="swal2-textarea" placeholder="Mensaje" style="width:100%;height:120px;resize:vertical;box-sizing:border-box;margin:0;"></textarea>`,
       width: 500,
       confirmButtonText: "Enviar mensaje",
@@ -888,7 +888,7 @@ function VerFichasTecnicasGerenteProyecto() {
   const denegarAlta = async (idFicha, numero) => {
     console.log("esta es la data en altaNegocio ", idFicha, numero);
     try {
-     
+
       const accionUsuario = await Swal.fire({
         icon: "warning",
         title: "¿Esta seguro que desea desaprobar?",
@@ -979,38 +979,38 @@ function VerFichasTecnicasGerenteProyecto() {
                             Ver Lista de Materiales
                           </button>
 
-                           {
-                            fichaTecnica.cotizacionenviadaFichatecnica == "0" &&(
+                          {
+                            fichaTecnica.cotizacionenviadaFichatecnica == "0" && (
                               <>
-                              <br />
-                              <span className="bg-warning text-dark px-2 rounded text-uppercase mt-3">
-                                Sin guardar
-                              </span>
-                            </>
-                            )
-                          }
-                           {
-                            fichaTecnica.cotizacionenviadaFichatecnica == "1" &&(
-                              <>
-                              <br />
-                              <span className="bg-primary text-light p-1 rounded text-uppercase mt-3">
-                                <AiOutlineSave className="h3 m-0 p-0 pe-1 my-2" />
-                                Guardado
-                              </span>
-                            </>
+                                <br />
+                                <span className="bg-warning text-dark px-2 rounded text-uppercase mt-3">
+                                  Sin guardar
+                                </span>
+                              </>
                             )
                           }
                           {
-                            fichaTecnica.cotizacionenviadaFichatecnica == "2" &&(
+                            fichaTecnica.cotizacionenviadaFichatecnica == "1" && (
                               <>
-                              <br />
-                              <span className="bg-danger text-dark px-2 rounded text-uppercase mt-3">
-                                Rechazado
-                              </span>
-                            </>
+                                <br />
+                                <span className="bg-primary text-light p-1 rounded text-uppercase mt-3">
+                                  <AiOutlineSave className="h3 m-0 p-0 pe-1 my-2" />
+                                  Guardado
+                                </span>
+                              </>
                             )
                           }
-                         
+                          {
+                            fichaTecnica.cotizacionenviadaFichatecnica == "2" && (
+                              <>
+                                <br />
+                                <span className="bg-danger text-dark px-2 rounded text-uppercase mt-3">
+                                  Rechazado
+                                </span>
+                              </>
+                            )
+                          }
+
                         </Card.Body>
                       </Card>
                     </div>
@@ -1070,59 +1070,59 @@ function VerFichasTecnicasGerenteProyecto() {
                       </p>
                     </div>
                     {showAdvertencia && (
-                    <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
-                      <div
-                        style={{
-                          border: "2px solid #ffc107",
-                          borderRadius: "12px",
-                          backgroundColor: "#fff8e1",
-                          padding: "20px 24px",
-                          boxShadow: "0 4px 12px rgba(255,193,7,0.25)",
-                          width: "100%",
-                        }}
-                      >
-                        <div className="d-flex align-items-center mb-2">
-                          <span style={{ fontSize: "1.6rem", marginRight: "10px" }}>⚠️</span>
-                          <span
-                            className="fw-bold text-uppercase"
-                            style={{ color: "#856404", fontSize: "0.95rem" }}
-                          >
-                            Advertencia
-                          </span>
-                        </div>
-                        <p
-                          className="mb-1 fw-bold"
-                          style={{ color: "#333", fontSize: "0.95rem" }}
+                      <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
+                        <div
+                          style={{
+                            border: "2px solid #ffc107",
+                            borderRadius: "12px",
+                            backgroundColor: "#fff8e1",
+                            padding: "20px 24px",
+                            boxShadow: "0 4px 12px rgba(255,193,7,0.25)",
+                            width: "100%",
+                          }}
                         >
-                          Proyecto creado en{" "}
-                          {fichaTecnica.created_at
-                            ? new Date(fichaTecnica.created_at).toLocaleDateString("es-ES", { month: "long", year: "numeric" }).replace(" de ", "-").replace(/^\w/, function(c) { return c.toUpperCase(); })
-                            : "fecha desconocida"}
-                        </p>
-                        <p
-                          className="mb-3"
-                          style={{ color: "#555", fontSize: "0.9rem" }}
-                        >
-                          ¿Desea actualizar los precios?
-                        </p>
-                        <div className="d-flex gap-2">
-                          <button
-                            className="btn btn-warning btn-sm fw-bold text-uppercase"
-                            style={{ minWidth: "90px" }}
-                            onClick={() => setShowBackupModal(true)}
+                          <div className="d-flex align-items-center mb-2">
+                            <span style={{ fontSize: "1.6rem", marginRight: "10px" }}>⚠️</span>
+                            <span
+                              className="fw-bold text-uppercase"
+                              style={{ color: "#856404", fontSize: "0.95rem" }}
+                            >
+                              Advertencia
+                            </span>
+                          </div>
+                          <p
+                            className="mb-1 fw-bold"
+                            style={{ color: "#333", fontSize: "0.95rem" }}
                           >
-                            Aceptar
-                          </button>
-                          <button
-                            className="btn btn-outline-secondary btn-sm text-uppercase"
-                            style={{ minWidth: "90px" }}
-                            onClick={() => setShowAdvertencia(false)}
+                            Proyecto creado en{" "}
+                            {fichaTecnica.created_at
+                              ? new Date(fichaTecnica.created_at).toLocaleDateString("es-ES", { month: "long", year: "numeric" }).replace(" de ", "-").replace(/^\w/, function (c) { return c.toUpperCase(); })
+                              : "fecha desconocida"}
+                          </p>
+                          <p
+                            className="mb-3"
+                            style={{ color: "#555", fontSize: "0.9rem" }}
                           >
-                            Cancelar
-                          </button>
+                            ¿Desea actualizar los precios?
+                          </p>
+                          <div className="d-flex gap-2">
+                            <button
+                              className="btn btn-warning btn-sm fw-bold text-uppercase"
+                              style={{ minWidth: "90px" }}
+                              onClick={() => setShowBackupModal(true)}
+                            >
+                              Aceptar
+                            </button>
+                            <button
+                              className="btn btn-outline-secondary btn-sm text-uppercase"
+                              style={{ minWidth: "90px" }}
+                              onClick={() => setShowAdvertencia(false)}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
                     )}
                     {resultadoActualizacion && (
                       <div className="mt-4 col-12 col-sm-5 col-md-5 col-lg-5 d-flex align-items-start">
@@ -1162,13 +1162,13 @@ function VerFichasTecnicasGerenteProyecto() {
                           )}
                           {resultadoActualizacion.tipo === "warning" && resultadoActualizacion.errores.length > 0 && (
                             <ul className="mb-0 ps-3" style={{ color: "#555", fontSize: "0.9rem" }}>
-                              {resultadoActualizacion.errores.map(function(e, i) { return <li key={i}>{e}</li>; })}
+                              {resultadoActualizacion.errores.map(function (e, i) { return <li key={i}>{e}</li>; })}
                             </ul>
                           )}
                           <button
                             className="btn btn-outline-secondary btn-sm text-uppercase mt-3"
                             style={{ minWidth: "90px" }}
-                            onClick={function() { setResultadoActualizacion(null); }}
+                            onClick={function () { setResultadoActualizacion(null); }}
                           >
                             Cerrar
                           </button>
@@ -1426,20 +1426,20 @@ function VerFichasTecnicasGerenteProyecto() {
                           </button>
                         </div>
                       )
-                      :(
-<div className="col-12 col-sm-2 my-1">
-                        <button
-                          className="btn btn-danger btn btn-sm text-uppercase"
-                          onClick={() => denegarAlta(fichaTecnica.idFichatecnica, 2)}
-                        >
-                          <BsFillEmojiFrownFill className="h3 m-0 p-0 pe-1" />
-                          Desaprobar{" "}
-                        </button>
-                      </div>
-                      )
+                        : (
+                          <div className="col-12 col-sm-2 my-1">
+                            <button
+                              className="btn btn-danger btn btn-sm text-uppercase"
+                              onClick={() => denegarAlta(fichaTecnica.idFichatecnica, 2)}
+                            >
+                              <BsFillEmojiFrownFill className="h3 m-0 p-0 pe-1" />
+                              Desaprobar{" "}
+                            </button>
+                          </div>
+                        )
                       }
 
-                      
+
                       <div className="col-12 col-sm-2 my-1">
                         <button
                           className="btn btn-warning btn btn-sm text-uppercase"
@@ -1508,7 +1508,7 @@ function VerFichasTecnicasGerenteProyecto() {
                           backgroundColor: "white",
                         },
                       }}
-                      /*     style={{height:'100%', opacity:0.8, backgroundColor:'white', textAlign:'center'}} */
+                    /*     style={{height:'100%', opacity:0.8, backgroundColor:'white', textAlign:'center'}} */
                     >
                       {detalleTabla.length >= 0 && (
                         <DataGrid
