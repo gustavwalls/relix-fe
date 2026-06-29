@@ -34,6 +34,7 @@ function RegistrarVendedor() {
         showConfirmButton: false,
         timer: 2500,
       });
+      await obtenerVendedores();
       return respuesta.data;
     } catch (error) {
       console.log(error.response.data.messages.error);

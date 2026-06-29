@@ -21,34 +21,15 @@ function ReporteAnalisis() {
 
   const reporteAnalisis = async (cellValues) => {
     let chaparId = cellValues.row.idFichatecnica;
-    console.log("este es el id", chaparId);
-    console.log("entraste a reportePresupuesto");
-    const fecha = new Date();
-    const hoy = fecha.getDate();
-    const mesActual = fecha.getMonth() + 1;
-    const anoActual = fecha.getFullYear();
     try {
-      var config = {
-        responseType: "arraybuffer",
-      };
-      const resultado = await clienteAxios.get(
-        `/ExcelReporteNueve/${chaparId}`,
-        config
-      );
-      console.log("respuesta de reporteAnalisis", resultado.data);
-
-      const url = URL.createObjectURL(
-        new Blob([resultado.data], {
-          type: "application/vnd.ms-excel",
-        })
-      );
-
+      const resultado = await clienteAxios.get(`/ExcelReporteNueve/${chaparId}`, { responseType: "arraybuffer" });
+      const contentDisposition = resultado.headers["content-disposition"];
+      const cdParts = contentDisposition ? contentDisposition.split("filename=") : [];
+      const filename = cdParts.length > 1 ? cdParts[1].replace(/"/g, "").trim() : "reporteAnalisis.xlsx";
+      const url = URL.createObjectURL(new Blob([resultado.data], { type: "application/vnd.ms-excel" }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `reporteAnalisis ${hoy}_${mesActual}_${anoActual}.xlsx`
-      );
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
@@ -58,34 +39,15 @@ function ReporteAnalisis() {
 
   const reporteAnalisisPartida = async (cellValues) => {
     let chaparId = cellValues.row.idFichatecnica;
-    console.log("este es el id", chaparId);
-    console.log("entraste a reportePresupuesto");
-    const fecha = new Date();
-    const hoy = fecha.getDate();
-    const mesActual = fecha.getMonth() + 1;
-    const anoActual = fecha.getFullYear();
     try {
-      var config = {
-        responseType: "arraybuffer",
-      };
-      const resultado = await clienteAxios.get(
-        `/ExcelReporteNuevePartida/${chaparId}`,
-        config
-      );
-      console.log("respuesta de reporteAnalisis", resultado.data);
-
-      const url = URL.createObjectURL(
-        new Blob([resultado.data], {
-          type: "application/vnd.ms-excel",
-        })
-      );
-
+      const resultado = await clienteAxios.get(`/ExcelReporteNuevePartida/${chaparId}`, { responseType: "arraybuffer" });
+      const contentDisposition = resultado.headers["content-disposition"];
+      const cdParts = contentDisposition ? contentDisposition.split("filename=") : [];
+      const filename = cdParts.length > 1 ? cdParts[1].replace(/"/g, "").trim() : "reporteAnalisisPartida.xlsx";
+      const url = URL.createObjectURL(new Blob([resultado.data], { type: "application/vnd.ms-excel" }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `reporteAnalisis ${hoy}_${mesActual}_${anoActual}.xlsx`
-      );
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
@@ -95,34 +57,15 @@ function ReporteAnalisis() {
 
   const reporteAnalisisSubPartida = async (cellValues) => {
     let chaparId = cellValues.row.idFichatecnica;
-    console.log("este es el id", chaparId);
-    console.log("entraste a reportePresupuesto");
-    const fecha = new Date();
-    const hoy = fecha.getDate();
-    const mesActual = fecha.getMonth() + 1;
-    const anoActual = fecha.getFullYear();
     try {
-      var config = {
-        responseType: "arraybuffer",
-      };
-      const resultado = await clienteAxios.get(
-        `/ExcelReporteNueveSubPartida/${chaparId}`,
-        config
-      );
-      console.log("respuesta de reporteAnalisis", resultado.data);
-
-      const url = URL.createObjectURL(
-        new Blob([resultado.data], {
-          type: "application/vnd.ms-excel",
-        })
-      );
-
+      const resultado = await clienteAxios.get(`/ExcelReporteNueveSubPartida/${chaparId}`, { responseType: "arraybuffer" });
+      const contentDisposition = resultado.headers["content-disposition"];
+      const cdParts = contentDisposition ? contentDisposition.split("filename=") : [];
+      const filename = cdParts.length > 1 ? cdParts[1].replace(/"/g, "").trim() : "reporteAnalisisSubPartida.xlsx";
+      const url = URL.createObjectURL(new Blob([resultado.data], { type: "application/vnd.ms-excel" }));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `reporteAnalisis ${hoy}_${mesActual}_${anoActual}.xlsx`
-      );
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
     } catch (error) {

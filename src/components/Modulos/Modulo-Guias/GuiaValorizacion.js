@@ -201,10 +201,9 @@ function GuiaValorizacion() {
 
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `R6_${ficha.nombreFichatecnica}-${ficha.numFichatecnica}.xlsx`
-      );
+      const cdParts = resultado.headers["content-disposition"] ? resultado.headers["content-disposition"].split("filename=") : [];
+      const filename = cdParts.length > 1 ? cdParts[1].replace(/"/g, "").trim() : "archivo.xlsx";
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
     } catch (error) {
